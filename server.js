@@ -34,18 +34,18 @@ app.use((err, req, res, next) => {
 // 黄金价格接口
 app.get('/api/gold-price', async (req, res) => {
   try {
-    console.log('当前AppCode:', process.env.AppCode); // DEBUG 输出
+    console.log('当前APPCODE:', process.env.APPCODE); // DEBUG 输出
     // console.log('收到黄金价格请求');
     // console.log('请求头:', req.headers);
-    // console.log('AppCode:', process.env.AppCode);
+    // console.log('APPCODE:', process.env.APPCODE);
     
-    if (!process.env.AppCode) {
-      throw new Error('AppCode 未配置');
+    if (!process.env.APPCODE) {
+      throw new Error('APPCODE 未配置');
     }
     
     const response = await axios.get('https://tsgold2.market.alicloudapi.com/shgold', {
       headers: {
-        'Authorization': `APPCODE ${process.env.AppCode}`,
+        'Authorization': `APPCODE ${process.env.APPCODE}`,
         'Content-Type': 'application/json'
       }
     });
@@ -83,18 +83,18 @@ app.get('/api/gold-price', async (req, res) => {
 // 白银价格接口
 app.get('/api/silver-price', async (req, res) => {
   try {
-    console.log('当前AppCode:', process.env.AppCode); // DEBUG 输出
+    console.log('当前APPCODE:', process.env.APPCODE); // DEBUG 输出
     // console.log('收到白银价格请求');
     // console.log('请求头:', req.headers);
-    // console.log('AppCode:', process.env.AppCode);
+    // console.log('APPCODE:', process.env.APPCODE);
     
-    if (!process.env.AppCode) {
-      throw new Error('AppCode 未配置');
+    if (!process.env.APPCODE) {
+      throw new Error('APPCODE 未配置');
     }
     
     const response = await axios.get('https://tssilver.market.alicloudapi.com/silver/shgold', {
       headers: {
-        'Authorization': `APPCODE ${process.env.AppCode}`,
+        'Authorization': `APPCODE ${process.env.APPCODE}`,
         'Content-Type': 'application/json'
       },
       params: {
@@ -139,7 +139,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`服务器运行在端口 ${PORT}`);
   console.log('环境变量加载情况:', { 
-    AppCode: process.env.AppCode ? '***' : '未设置',
+    APPCODE: process.env.APPCODE ? '***' : '未设置',
     PORT: process.env.PORT || '3000 (默认)'
   });
 }); 
