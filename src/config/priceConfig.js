@@ -32,7 +32,7 @@ export const priceConfig = {
     divisor: 1, // 除数
     multiplier: 1, // 乘数
     addition: 0, // 加数
-    subtraction: -20, // 减数
+    subtraction: 20, // 减数
     decimalPlaces: 2, // 保留小数位数
   }
 }
