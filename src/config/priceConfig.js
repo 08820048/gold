@@ -1,7 +1,7 @@
 // 价格数据处理配置
 export const priceConfig = {
   // 刷新频率配置（毫秒）
-  refreshInterval: 5000,
+  refreshInterval: 30000,
   
   gold: {
     // 黄金价格处理参数

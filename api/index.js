@@ -1,39 +1,80 @@
-import axios from 'axios';
+export const config = {
+  runtime: 'edge'
+};
 
-export default async function handler(req, res) {
+export default async function handler(request) {
   // 设置CORS头
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
 
   // 处理OPTIONS请求
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 200, headers });
   }
 
-  const { type } = req.query;
+  const url = new URL(request.url);
+  const path = url.pathname;
   const appCode = process.env.APPCODE;
 
   if (!appCode) {
-    return res.status(500).json({ error: 'AppCode not configured' });
+    return new Response(
+      JSON.stringify({ error: 'AppCode not configured' }), 
+      { status: 500, headers }
+    );
   }
 
   try {
-    const response = await axios.get('https://tsgold2.market.alicloudapi.com/shgold', {
+    let apiUrl = 'https://tsgold2.market.alicloudapi.com/shgold';
+    
+    // 如果是白银价格请求，使用不同的API端点
+    if (path.includes('/silver-price')) {
+      apiUrl = 'https://tssilver.market.alicloudapi.com/silver/shgold';
+    }
+
+    const response = await fetch(apiUrl, {
       headers: {
         'Authorization': `APPCODE ${appCode}`,
         'Content-Type': 'application/json'
       }
     });
 
-    res.status(200).json(response.data);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API Response not OK:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        body: errorText
+      });
+      
+      // 如果是配额超限错误，返回特定的错误信息
+      if (response.headers.get('x-ca-error-message')?.includes('quota exhausted')) {
+        return new Response(
+          JSON.stringify({
+            error: 'API调用次数超限',
+            message: '今日API调用次数已达到限制，请明天再试'
+          }),
+          { status: 429, headers }
+        );
+      }
+
+      throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return new Response(JSON.stringify(data), { status: 200, headers });
   } catch (error) {
-    console.error('Error fetching data:', error.message);
-    res.status(error.response?.status || 500).json({
-      error: 'Failed to fetch data',
-      message: error.message,
-      details: error.response?.data
-    });
+    console.error('Error fetching data:', error);
+    return new Response(
+      JSON.stringify({
+        error: 'Failed to fetch data',
+        message: error.message
+      }),
+      { status: 500, headers }
+    );
   }
 } 

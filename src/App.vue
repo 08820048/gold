@@ -43,17 +43,16 @@ const priceData = ref([
 const fetchGoldPrice = async () => {
   try {
     console.log('开始请求黄金价格...')
-    const response = await axios.get('/api/gold-price', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    console.log('黄金价格响应:', response)
+    const response = await fetch('/api/gold-price')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data = await response.json()
+    console.log('黄金价格响应:', data)
     
-    if (response.data && response.data.code === 1) {
-      const goldData = response.data.data.list.Au9999
-      const platinumData = response.data.data.list.PT9995
+    if (data && data.code === 1) {
+      const goldData = data.data.list.Au9999
+      const platinumData = data.data.list.PT9995
       
       // 更新黄金价格
       const goldIndex = priceData.value.findIndex(item => item.type === '黄金')
@@ -118,23 +117,24 @@ const fetchGoldPrice = async () => {
 const fetchSilverPrice = async () => {
   try {
     console.log('开始请求白银价格...')
-    const response = await axios.get('/api/silver-price', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    console.log('白银价格响应:', response)
+    const response = await fetch('/api/silver-price')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data = await response.json()
+    console.log('白银价格响应:', data)
     
-    if (response.data && response.data.code === 1) {
+    if (data && data.code === 1) {
       // 使用第一个可用的白银数据
-      const silverData = Object.values(response.data.data.list).find(item => 
-        item.typename && item.typename.toLowerCase().includes('银')
+      const silverData = Object.values(data.data.list).find(item => 
+        item.typename && item.typename.includes('银')
       )
+      
       if (silverData) {
         const silverIndex = priceData.value.findIndex(item => item.type === '白银')
         if (silverIndex !== -1) {
           const item = priceData.value[silverIndex]
+          item.error = ''
           item.buyPrice = processPrice(silverData.price, priceConfig.silver)
           item.sellPrice = processPrice(silverData.price, priceConfig.silver)
           item.highPrice = processPrice(silverData.high || silverData.price, priceConfig.silver)
@@ -144,11 +144,15 @@ const fetchSilverPrice = async () => {
     }
   } catch (error) {
     console.error('获取白银价格时出错:', error)
-    console.error('错误详情:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status
-    })
+    const silverIndex = priceData.value.findIndex(item => item.type === '白银')
+    if (silverIndex !== -1) {
+      const item = priceData.value[silverIndex]
+      if (error.response?.status === 429 || (error.response?.status === 403 && error.response?.data?.message?.includes('quota'))) {
+        item.error = '价格更新已达今日限额，请稍后再试'
+      } else {
+        item.error = '获取价格失败，请稍后再试'
+      }
+    }
   }
 }
 
