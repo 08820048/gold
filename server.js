@@ -34,6 +34,7 @@ app.use((err, req, res, next) => {
 // 黄金价格接口
 app.get('/api/gold-price', async (req, res) => {
   try {
+    console.log('当前AppCode:', process.env.AppCode); // DEBUG 输出
     // console.log('收到黄金价格请求');
     // console.log('请求头:', req.headers);
     // console.log('AppCode:', process.env.AppCode);
@@ -82,6 +83,7 @@ app.get('/api/gold-price', async (req, res) => {
 // 白银价格接口
 app.get('/api/silver-price', async (req, res) => {
   try {
+    console.log('当前AppCode:', process.env.AppCode); // DEBUG 输出
     // console.log('收到白银价格请求');
     // console.log('请求头:', req.headers);
     // console.log('AppCode:', process.env.AppCode);
