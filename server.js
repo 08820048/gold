@@ -4,6 +4,7 @@ import cors from 'cors';
 import axios from 'axios';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,6 +31,9 @@ app.use((err, req, res, next) => {
     message: err.message
   });
 });
+
+// 静态托管 dist 目录（必须有！）
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // 黄金价格接口
 app.get('/api/gold-price', async (req, res) => {
@@ -133,6 +137,11 @@ app.get('/api/silver-price', async (req, res) => {
       details: error.response?.data
     });
   }
+});
+
+// SPA history 路由兜底，放在所有 API 路由之后
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
