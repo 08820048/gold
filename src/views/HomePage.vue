@@ -224,9 +224,12 @@ onMounted(() => {
       <div class="disclaimer">
         声明：①上图黄金当前预估价格是基于当前上海黄金交易所Au9999实时金价进行预估的回收价格。如黄金物品含金量达不到99.99%，回收时将以实际含金量进行计算。在收到您的物品后进行检测，并按当下的实时金价及检测结果进行报价。*如测试结果和您提供的信息有差异，或实时金价发生变化，实际回收价可能产生变化，手续费也会发生变化。②提醒：全部破损性检测,外观不支持复原。
       </div>
-      <div class="contact-info">
+      <div class="contact-info" style="max-width: 800px; width: 100%;">
         <p>联系热线：手机号15555521595（微信同号）</p>
-        <p>地址：杭州市上城区九堡镇客运中心斜旁。</p>
+        <div class="address-row">
+          <span class="address-item">地址一：杭州市萧山区金慧路241号黄金回收手机电脑专卖快修</span>
+          <span class="address-item">地址二：杭州市上城区新风路695号立奢黄金回收手机电脑专卖抵押</span>
+        </div>
         <div class="qr-code">
           <img src="/code.png" alt="微信二维码" class="qr-image">
           <p>长按扫码添加客服</p>
@@ -282,11 +285,13 @@ onMounted(() => {
 }
 
 .title {
-  font-size: 24px;
+  font-size: 36px;
   font-weight: bold;
   margin-bottom: 20px;
   color: #ffd700;
   text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
 }
 
 .price-table {
@@ -368,10 +373,40 @@ onMounted(() => {
   margin-top: 20px;
   text-align: center;
   color: #ddd;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  width: 100%;
+  max-width: 800px !important;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contact-info p {
   margin: 10px 0;
+  line-height: 1.5;
+}
+
+.contact-info p:first-child {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.address-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.address-item {
+  display: inline-block;
+  text-align: left;
+  font-size: 14px;
+  flex: 1;
+  min-width: 300px;
 }
 
 .qr-code {
@@ -412,7 +447,7 @@ onMounted(() => {
 
   .title {
     grid-column: 1 / -1;
-    font-size: 28px;
+    font-size: 42px;
   }
 
   .price-table {
@@ -462,8 +497,9 @@ onMounted(() => {
   }
 
   .title {
-    font-size: 20px;
+    font-size: 28px;
     margin-top: 0;
+    letter-spacing: 1px;
   }
 
   .col {
@@ -484,6 +520,18 @@ onMounted(() => {
     max-width: 95%;
     margin: 0 auto 20px;
   }
+
+  .address-container {
+    gap: 10px;
+  }
+
+  .address-item {
+    padding: 8px;
+  }
+
+  .contact-title {
+    font-size: 15px;
+  }
 }
 
 /* 手机尺寸 */
@@ -502,8 +550,9 @@ onMounted(() => {
   }
 
   .title {
-    font-size: 18px;
+    font-size: 24px;
     margin-top: 0;
+    letter-spacing: 1px;
   }
 
   .col {
@@ -525,6 +574,23 @@ onMounted(() => {
   }
 
   .contact-info p {
+    font-size: 12px;
+    margin: 8px 0;
+  }
+
+  .address-row {
+    gap: 8px;
+    margin: 8px 0;
+    flex-direction: column;
+  }
+
+  .address-item {
+    font-size: 12px;
+    min-width: 100%;
+    text-align: center;
+  }
+
+  .qr-code p {
     font-size: 12px;
     margin: 8px 0;
   }

@@ -28,8 +28,10 @@
         <div class="contact-info-grid">
           <div class="contact-label">联系电话：</div>
           <div class="contact-value">15555521595（微信同号）</div>
-          <div class="contact-label">联系地址：</div>
-          <div class="contact-value">浙江省杭州市萧山区北干街道金慧路241号</div>
+          <div class="contact-label">地址一：</div>
+          <div class="contact-value">杭州市萧山区金慧路241号黄金回收手机电脑专卖快修</div>
+          <div class="contact-label">地址二：</div>
+          <div class="contact-value">杭州市上城区新风路695号立奢黄金回收手机电脑专卖抵押</div>
         </div>
       </div>
     </div>
