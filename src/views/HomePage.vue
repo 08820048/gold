@@ -71,8 +71,9 @@ const fetchGoldPrice = async () => {
         const item = priceData.value[goldIndex]
         item.error = ''
         const basePrice = processPrice(goldData.price, priceConfig.gold)
-        item.buyPrice = basePrice
-        item.sellPrice = basePrice
+        // 在黄金买入和卖出价格上减去 3.4
+        item.buyPrice = (parseFloat(basePrice) - 3.4).toFixed(2)
+        item.sellPrice = (parseFloat(basePrice) - 3.4).toFixed(2)
         item.highPrice = processPrice(goldData.price, priceConfig.gold)
         item.lowPrice = processPrice(goldData.price, priceConfig.gold)
       }
