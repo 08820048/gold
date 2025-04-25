@@ -86,8 +86,9 @@ const fetchGoldPrice = async () => {
         const basePrice = processPrice(goldData.price, priceConfig.k18)
         item.buyPrice = basePrice
         item.sellPrice = (parseFloat(basePrice) + 1).toFixed(2)
-        item.highPrice = processPrice(goldData.maxPrice, priceConfig.k18)
-        item.lowPrice = processPrice(goldData.minPrice, priceConfig.k18)
+        // 18K金的高低价用黄金的maxprice/minprice经过18K配置处理
+        item.highPrice = processPrice(goldData.maxprice || goldData.maxPrice, priceConfig.k18)
+        item.lowPrice = processPrice(goldData.minprice || goldData.minPrice, priceConfig.k18)
       }
 
       // 更新铂金价格
