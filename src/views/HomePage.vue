@@ -144,8 +144,10 @@ const fetchSilverPrice = async () => {
         const item = priceData.value[silverIndex]
         item.error = ''
         const basePrice = processPrice(silverData.price, priceConfig.silver)
-        item.buyPrice = basePrice
-        item.sellPrice = (parseFloat(basePrice) + 1).toFixed(2)
+        // 白银价格减 0.1 元
+        const buyPrice = (parseFloat(basePrice) - 0.1).toFixed(2)
+        item.buyPrice = buyPrice
+        item.sellPrice = (parseFloat(buyPrice) + 1).toFixed(2)
         item.highPrice = processPrice(silverData.maxprice, priceConfig.silver)
         item.lowPrice = processPrice(silverData.minprice, priceConfig.silver)
       }
