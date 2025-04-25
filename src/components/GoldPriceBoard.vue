@@ -5,8 +5,8 @@
       <thead>
         <tr>
           <th>品类</th>
-          <th>买入价</th>
-          <th>卖出价</th>
+          <th>回购</th>
+          <th>销售</th>
           <th>最新价</th>
         </tr>
       </thead>

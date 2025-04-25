@@ -62,20 +62,20 @@ const fetchGoldPrice = async () => {
     const data = response.data
 
     if (data && data.code === 1) {
-      const goldData = data.data.list.Au9999
-      const platinumData = data.data.list.PT9995
-
-      // 更新黄金价格
-      const goldIndex = priceData.value.findIndex(item => item.type === '黄金')
+      const goldData = data.data.list.Au9995;
+      if (!goldData) {
+        errorMessage.value = '未获取到Au9995数据';
+        return;
+      }
+      const goldIndex = priceData.value.findIndex(item => item.type === '黄金');
       if (goldIndex !== -1) {
-        const item = priceData.value[goldIndex]
-        item.error = ''
-        const basePrice = processPrice(goldData.price, priceConfig.gold)
-        // 在黄金买入和卖出价格上减去 3.4
-        item.buyPrice = (parseFloat(basePrice) - 3.4).toFixed(2)
-        item.sellPrice = (parseFloat(basePrice) - 3.4).toFixed(2)
-        item.highPrice = processPrice(goldData.price, priceConfig.gold)
-        item.lowPrice = processPrice(goldData.price, priceConfig.gold)
+        const item = priceData.value[goldIndex];
+        item.error = '';
+        const basePrice = processPrice(goldData.price, priceConfig.gold);
+        item.buyPrice = basePrice;
+        item.sellPrice = (parseFloat(basePrice) + 1).toFixed(2);
+        item.highPrice = processPrice(goldData.maxprice || goldData.maxPrice, priceConfig.gold);
+        item.lowPrice = processPrice(goldData.minprice || goldData.minPrice, priceConfig.gold);
       }
 
       // 更新18K金价格（使用配置参数）
@@ -83,23 +83,24 @@ const fetchGoldPrice = async () => {
       if (k18Index !== -1) {
         const item = priceData.value[k18Index]
         item.error = ''
-        const basePrice = goldData.price
-        item.buyPrice = processPrice(basePrice, priceConfig.k18)
-        item.sellPrice = processPrice(basePrice, priceConfig.k18)
-        item.highPrice = processPrice(basePrice, priceConfig.k18)
-        item.lowPrice = processPrice(basePrice, priceConfig.k18)
+        const basePrice = processPrice(goldData.price, priceConfig.k18)
+        item.buyPrice = basePrice
+        item.sellPrice = (parseFloat(basePrice) + 1).toFixed(2)
+        item.highPrice = processPrice(goldData.maxPrice, priceConfig.k18)
+        item.lowPrice = processPrice(goldData.minPrice, priceConfig.k18)
       }
 
       // 更新铂金价格
+      const platinumData = data.data.list.PT9995;
       const platinumIndex = priceData.value.findIndex(item => item.type === '铂金')
       if (platinumIndex !== -1 && platinumData) {
         const item = priceData.value[platinumIndex]
         item.error = ''
         const basePrice = processPrice(platinumData.price, priceConfig.platinum)
         item.buyPrice = basePrice
-        item.sellPrice = basePrice
-        item.highPrice = processPrice(platinumData.price, priceConfig.platinum)
-        item.lowPrice = processPrice(platinumData.price, priceConfig.platinum)
+        item.sellPrice = (parseFloat(basePrice) + 1).toFixed(2)
+        item.highPrice = processPrice(platinumData.maxprice || platinumData.maxPrice, priceConfig.platinum)
+        item.lowPrice = processPrice(platinumData.minprice || platinumData.minPrice, priceConfig.platinum)
       }
     } else {
       errorMessage.value = data.msg || '获取价格失败'
@@ -135,8 +136,8 @@ const fetchSilverPrice = async () => {
     const data = response.data
 
     if (data && data.code === 1) {
-      const silverData = data.data.list.Ag9999
-
+      const silverData = data.data.list[1]
+      console.log("白银数据：",silverData)
       // 更新白银价格
       const silverIndex = priceData.value.findIndex(item => item.type === '白银')
       if (silverIndex !== -1 && silverData) {
@@ -144,9 +145,9 @@ const fetchSilverPrice = async () => {
         item.error = ''
         const basePrice = processPrice(silverData.price, priceConfig.silver)
         item.buyPrice = basePrice
-        item.sellPrice = basePrice
-        item.highPrice = processPrice(silverData.price, priceConfig.silver)
-        item.lowPrice = processPrice(silverData.price, priceConfig.silver)
+        item.sellPrice = (parseFloat(basePrice) + 1).toFixed(2)
+        item.highPrice = processPrice(silverData.maxprice, priceConfig.silver)
+        item.lowPrice = processPrice(silverData.minprice, priceConfig.silver)
       }
     } else {
       errorMessage.value = data.msg || '获取价格失败'
@@ -190,8 +191,8 @@ onMounted(() => {
       <div class="price-table">
         <div class="table-header">
           <div class="col type-col">类型</div>
-          <div class="col">买入价</div>
-          <div class="col">卖出价</div>
+          <div class="col">回购</div>
+          <div class="col">销售</div>
           <div class="col trend-col">
             <div>最高价</div>
             <div>最低价</div>

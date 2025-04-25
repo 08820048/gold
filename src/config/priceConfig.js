@@ -8,7 +8,7 @@ export const priceConfig = {
     divisor: 1, // 除数，默认为1表示不处理
     multiplier: 1, // 乘数，默认为1表示不处理
     addition: 0, // 加数，默认为0表示不处理
-    subtraction: 0, // 减数，默认为0表示不处理
+    subtraction: 3, // 减数，默认为0表示不处理
     decimalPlaces: 2, // 保留小数位数
   },
   silver: {
